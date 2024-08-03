@@ -65,7 +65,8 @@ public class DevMonitorServiceImpl implements DevMonitorService {
         long[] prevTicks = cpu.getSystemCpuLoadTicks();
         Util.sleep(1000);
         long[] ticks = cpu.getSystemCpuLoadTicks();
-        long nice = ticks[CentralProcessor.TickType.NICE.getIndex()]
+
+        /*long nice = ticks[CentralProcessor.TickType.NICE.getIndex()]
                 - prevTicks[CentralProcessor.TickType.NICE.getIndex()];
         long irq = ticks[CentralProcessor.TickType.IRQ.getIndex()]
                 - prevTicks[CentralProcessor.TickType.IRQ.getIndex()];
@@ -80,7 +81,27 @@ public class DevMonitorServiceImpl implements DevMonitorService {
         long ioWait = ticks[CentralProcessor.TickType.IOWAIT.getIndex()]
                 - prevTicks[CentralProcessor.TickType.IOWAIT.getIndex()];
         long idle = ticks[CentralProcessor.TickType.IDLE.getIndex()]
-                - prevTicks[CentralProcessor.TickType.IDLE.getIndex()];
+                - prevTicks[CentralProcessor.TickType.IDLE.getIndex()];*/
+
+        // TODO 更改，针对上面TickType枚举类无法调用getIndex方法
+        long nice = ticks[1]
+                - prevTicks[1];
+        long irq = ticks[5]
+                - prevTicks[5];
+        long softIrq = ticks[6]
+                - prevTicks[6];
+        long steal = ticks[7]
+                - prevTicks[7];
+        long sys = ticks[2]
+                - prevTicks[2];
+        long user = ticks[0]
+                - prevTicks[0];
+        long ioWait = ticks[4]
+                - prevTicks[4];
+        long idle = ticks[3]
+                - prevTicks[3];
+
+
         long totalCpu = user + nice + sys + idle + ioWait + irq + softIrq + steal;
         devMonitorCpuInfo.setCpuSysUseRate(NumberUtil.div(NumberUtil.mul(sys, 100), totalCpu, 2) + "%");
         devMonitorCpuInfo.setCpuUserUseRate(NumberUtil.div(NumberUtil.mul(user, 100), totalCpu, 2) + "%");
